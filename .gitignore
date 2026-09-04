@@ -1,0 +1,12 @@
+.vscode/
+.next/
+node_modules/
+
+*.user
+*.suo
+*.log
+.env
+.env*.local
+
+TestResults/
+coverage/
