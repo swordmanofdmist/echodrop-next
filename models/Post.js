@@ -8,6 +8,10 @@ const PostSchema = new mongoose.Schema(
       trim: true,
       maxlength: 300
     },
+    images: {
+      type: [String],
+      default: []
+    },
     city: {
       type: String,
       required: true

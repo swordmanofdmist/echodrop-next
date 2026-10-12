@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    sessionVersion: {
+      type: Number,
+      default: 0,
+      min: 0
+    },
     city: {
       type: String,
       required: true,

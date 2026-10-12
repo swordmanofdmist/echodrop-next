@@ -1,78 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { MapPin, UserRound } from "lucide-react";
+import AppShell from "@/components/app-shell";
+import PostCard from "@/components/post-card";
+import { useResource } from "@/lib/use-resource";
 
 export default function ProfilePage() {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState("");
+  const profile = useResource("/api/auth/me");
+  const posts = useResource("/api/posts/mine");
+  const user = profile.data?.user;
 
-  useEffect(() => {
-    async function loadProfile() {
-      const meResponse = await fetch("/api/auth/me");
-      if (meResponse.status === 401) {
-        router.push("/");
-        return;
-      }
-
-      if (!meResponse.ok) {
-        setError("Failed to load profile.");
-        return;
-      }
-
-      const me = await meResponse.json();
-      setUser(me.user);
-
-      const postsResponse = await fetch("/api/posts/mine");
-      if (postsResponse.ok) {
-        setPosts(await postsResponse.json());
-      }
-    }
-
-    loadProfile();
-  }, [router]);
-
-  return (
-    <main className="shell">
-      <header className="topbar">
-        <Link className="brand" href="/home">
-          EchoDrop
-        </Link>
-        <nav className="nav">
-          <Link href="/home">Feed</Link>
-          <Link href="/about">About</Link>
-        </nav>
-      </header>
-
-      {error && <p className="error">{error}</p>}
-
-      {user && (
-        <section className="post">
-          <h1>{user.username}</h1>
-          <p className="muted">{user.email}</p>
-          <p className="muted">{user.city}</p>
-        </section>
-      )}
-
-      <section className="comments">
-        <h2>My Posts</h2>
-        {posts.map((post) => (
-          <Link className="post" href={`/post/${post.id}`} key={post.id}>
-            <span className="post-content">
-              {post.content.length > 124 ? `${post.content.slice(0, 124)}...` : post.content}
-            </span>
-            <span className="post-actions">
-              <span>{post.upvoteCount} like(s)</span>
-              <span>{post.commentCount} comment(s)</span>
-              {post.isExpired && <span>Expired</span>}
-            </span>
-          </Link>
-        ))}
-        {posts.length === 0 && <p className="muted">You have not posted anything yet.</p>}
-      </section>
-    </main>
-  );
+  return <AppShell>
+    <header className="page-heading"><div><span className="eyebrow">YOUR LITTLE CORNER</span><h1>My profile<span className="brand-dot">.</span></h1></div><UserRound className="heading-icon" size={30} /></header>
+    {(profile.error || posts.error) && <p className="error" role="alert">{profile.error || posts.error}</p>}
+    {profile.loading && <p className="muted" role="status">Loading your profile...</p>}
+    {user && <section className="profile-summary"><span className="profile-avatar">{user.username.slice(0, 1).toUpperCase()}</span><div><h2>{user.username}</h2><p className="muted">{user.email}</p><span className="location"><MapPin size={15} />{user.city}</span></div></section>}
+    <div className="section-heading"><h2>My drops</h2><span className="muted">{posts.data?.length ?? 0} total</span></div>
+    {posts.loading ? <p className="empty-state" role="status">Loading your drops...</p> : <section className="feed" aria-label="My posts">
+      {posts.data?.map((post) => <PostCard key={post.id} post={post} />)}
+      {!posts.error && posts.data?.length === 0 && <div className="empty-state"><h2>Your story starts here.</h2><p>You have not shared a drop yet.</p></div>}
+    </section>}
+  </AppShell>;
 }

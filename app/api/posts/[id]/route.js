@@ -7,6 +7,8 @@ import Comment from "@/models/Comment";
 import Post from "@/models/Post";
 import Vote from "@/models/Vote";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(_request, { params }) {
   await connectDb();
   const { id } = await params;
@@ -34,8 +36,10 @@ export async function DELETE(_request, { params }) {
     return NextResponse.json({ error: "You must be logged in." }, { status: 401 });
   }
 
-  await connectDb();
   const { id } = await params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "Post not found." }, { status: 404 });
+  }
   const post = await Post.findById(id);
   if (!post) {
     return NextResponse.json({ error: "Post not found." }, { status: 404 });

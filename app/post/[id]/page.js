@@ -2,145 +2,74 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { ArrowLeft, MessageCircle, Send } from "lucide-react";
+import AppShell from "@/components/app-shell";
+import PostCard from "@/components/post-card";
+import { api } from "@/lib/api";
+import { useResource } from "@/lib/use-resource";
 
 export default function PostPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [post, setPost] = useState(null);
+  const { data: post, setData: setPost, error, setError, loading } = useResource(`/api/posts/${id}`);
   const [comment, setComment] = useState("");
-  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    async function loadPost() {
-      const response = await fetch(`/api/posts/${id}`);
-      if (!response.ok) {
-        setError("Failed to load post.");
-        return;
-      }
-
-      setPost(await response.json());
+  async function act(action) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      await action();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setBusy(false);
     }
-
-    loadPost();
-  }, [id]);
-
-  async function likePost() {
-    const response = await fetch(`/api/posts/${id}/vote`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isUpvote: true })
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      setError(data.error || "Failed to like post.");
-      return;
-    }
-
-    setPost({ ...post, upvoteCount: data.upvotes, downvoteCount: data.downvotes });
   }
 
-  async function submitComment(event) {
+  function likePost() {
+    return act(async () => {
+      const data = await api(`/api/posts/${id}/vote`, { method: "POST", body: { isUpvote: true } });
+      setPost((current) => ({ ...current, upvoteCount: data.upvotes, downvoteCount: data.downvotes }));
+    });
+  }
+
+  function submitComment(event) {
     event.preventDefault();
-    const text = comment.trim();
-    if (!text || post?.isExpired) return;
-
-    const response = await fetch("/api/comments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ postId: id, content: text })
+    if (!comment.trim() || post?.isExpired) return;
+    return act(async () => {
+      const data = await api("/api/comments", { method: "POST", body: { postId: id, content: comment.trim() } });
+      setPost((current) => ({ ...current, comments: [data, ...current.comments], commentCount: current.commentCount + 1 }));
+      setComment("");
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      setError(data.error || "Failed to post comment.");
-      return;
-    }
-
-    setComment("");
-    setPost({ ...post, comments: [data, ...post.comments], commentCount: post.commentCount + 1 });
   }
 
-  async function deletePost() {
-    const response = await fetch(`/api/posts/${id}`, { method: "DELETE" });
-    if (!response.ok) {
-      const data = await response.json();
-      setError(data.error || "Failed to delete post.");
-      return;
-    }
-
-    router.push("/home");
+  function deletePost() {
+    if (!window.confirm("Delete this post and its comments?")) return;
+    return act(async () => {
+      await api(`/api/posts/${id}`, { method: "DELETE" });
+      router.replace("/home");
+    });
   }
 
-  return (
-    <main className="shell">
-      <header className="topbar">
-        <Link className="brand" href="/home">
-          EchoDrop
-        </Link>
-        <nav className="nav">
-          <Link href="/home">Feed</Link>
-          <Link href="/profile">Profile</Link>
-        </nav>
-      </header>
-
-      {error && <p className="error">{error}</p>}
-      {!post && !error && <p className="muted">Loading post...</p>}
-
-      {post && (
-        <>
-          <article className="post">
-            <p className="post-content">
-              {post.content}
-              {post.isExpired ? " (expired)" : ""}
-            </p>
-            <div className="post-meta">
-              <span>{post.city}</span>
-              <span>{new Date(post.createdAt).toLocaleString()}</span>
-            </div>
-            <div className="post-actions">
-              <button className="vote" onClick={likePost} aria-label="Like post">
-                Like
-              </button>
-              <span>{post.upvoteCount} like(s)</span>
-              <span>{post.downvoteCount} downvote(s)</span>
-              {post.canDelete && (
-                <button className="btn secondary" onClick={deletePost}>
-                  Delete
-                </button>
-              )}
-            </div>
-          </article>
-
-          <section className="comments">
-            <h2>Comments</h2>
-            {post.comments.map((item) => (
-              <div className="comment" key={item.id}>
-                {item.content}
-              </div>
-            ))}
-            {post.comments.length === 0 && <p className="muted">No comments yet.</p>}
-
-            <form className="stack" onSubmit={submitComment}>
-              <textarea
-                className="textarea"
-                maxLength={300}
-                placeholder={post.isExpired ? "Comments are disabled on expired posts." : "Write a comment..."}
-                value={comment}
-                onChange={(event) => setComment(event.target.value)}
-                disabled={post.isExpired}
-              />
-              <div className="composer-footer">
-                <span className="muted">{comment.length}/300</span>
-                <button className="btn" disabled={post.isExpired}>
-                  Post Comment
-                </button>
-              </div>
-            </form>
-          </section>
-        </>
-      )}
-    </main>
-  );
+  return <AppShell>
+    <Link className="back-link" href="/home" prefetch={false}><ArrowLeft size={17} />Back to the feed</Link>
+    <header className="page-heading"><div><span className="eyebrow">A MOMENT TO CONNECT</span><h1>The conversation<span className="brand-dot">.</span></h1></div></header>
+    {error && <p className="error" role="alert">{error}</p>}
+    {loading && <p className="empty-state" role="status">Loading conversation...</p>}
+    {post && <>
+      <PostCard post={post} detail onLike={likePost} onDelete={post.canDelete ? deletePost : undefined} busy={busy} />
+      <div className="section-heading"><h2>Comments</h2><span className="muted">{post.commentCount}</span></div>
+      <form className="comment-composer stack" onSubmit={submitComment}>
+        <label htmlFor="comment">Add your voice</label>
+        <textarea id="comment" className="textarea" maxLength={300} placeholder={post.isExpired ? "This conversation has expired." : "Leave a kind thought..."} value={comment} onChange={(event) => setComment(event.target.value)} disabled={post.isExpired || busy} required />
+        <div className="composer-footer"><span className="muted">{comment.length} / 300</span><button className="btn" disabled={post.isExpired || busy || !comment.trim()}><Send size={16} />{busy ? "Please wait..." : "Post comment"}</button></div>
+      </form>
+      <section className="comments" aria-label="Comments">{post.comments.map((item) => <article className="comment" key={item.id}><span className="avatar"><MessageCircle size={17} /></span><div><strong>Someone nearby</strong><p>{item.content}</p><time dateTime={item.createdAt}>{new Date(item.createdAt).toLocaleString()}</time></div></article>)}
+        {post.comments.length === 0 && <p className="empty-state">No comments yet. Start the conversation.</p>}
+      </section>
+    </>}
+  </AppShell>;
 }

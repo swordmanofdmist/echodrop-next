@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EchoDrop | Project &amp; Presentation Guide</title>
+  <style>
+    :root { --ink: #25292e; --muted: #626b73; --accent: #b64035; --green: #296858; --line: #dde3e6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #edf0f2; color: var(--ink); font: 15px/1.6 Arial, Helvetica, sans-serif; letter-spacing: 0; }
+    main { max-width: 960px; margin: 32px auto; }
+    .sheet { background: white; padding: 52px 64px; margin-bottom: 24px; }
+    .kicker { color: var(--green); font-size: 11px; font-weight: 700; text-transform: uppercase; margin: 0 0 12px; }
+    h1 { font-size: 52px; line-height: 1.1; margin: 0 0 12px; }
+    h1 span { color: var(--accent); }
+    h2 { font-size: 28px; line-height: 1.2; margin: 0 0 20px; }
+    h3 { font-size: 17px; line-height: 1.35; margin: 23px 0 8px; }
+    p { margin: 9px 0; }
+    .subtitle { font-size: 22px; margin: 8px 0 22px; }
+    .lead { font-size: 17px; }
+    .muted, .source, figcaption { color: var(--muted); }
+    .source { font-size: 12px; margin-top: -10px; margin-bottom: 18px; }
+    a { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    code { font: .88em/1.5 Consolas, 'Courier New', monospace; background: #f1f4f5; padding: 1px 4px; border-radius: 3px; overflow-wrap: anywhere; }
+    pre { font: 12px/1.6 Consolas, 'Courier New', monospace; background: #f1f4f5; padding: 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    pre code { background: none; padding: 0; font: inherit; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 18px; font-size: 13px; }
+    th { text-align: left; color: var(--green); background: #f0f5f3; }
+    th, td { vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+    th:first-child { width: 27%; }
+    ul, ol { padding-left: 22px; margin: 10px 0 16px; }
+    li { margin: 5px 0; }
+    .say, .note { border-left: 3px solid var(--green); padding: 12px 16px; margin: 20px 0; background: #f3f7f5; }
+    .note { border-color: var(--accent); background: #fcf4f2; }
+    .say strong, .note strong { display: block; margin-bottom: 4px; font-size: 12px; }
+    .toc { columns: 2; column-gap: 36px; font-size: 13px; }
+    .toc a { display: block; padding: 5px 0; break-inside: avoid; }
+    .rule { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--green); border-bottom: 1px solid var(--line); margin: 20px 0; }
+    .flow div { padding: 15px 10px; border-right: 1px solid var(--line); font-size: 12px; }
+    .flow div:last-child { border-right: 0; }
+    .flow b { display: block; font-size: 14px; margin-bottom: 4px; }
+    .small { font-size: 12px; }
+    .qa dt { font-weight: 700; margin-top: 14px; }
+    .qa dd { margin: 4px 0 0; }
+    @media screen and (max-width: 700px) {
+      main { margin: 0; }
+      .sheet { padding: 30px 22px; margin-bottom: 10px; }
+      h1 { font-size: 40px; }
+      h2 { font-size: 25px; }
+      .toc { columns: 1; }
+      .flow { grid-template-columns: repeat(2, 1fr); }
+      table { font-size: 11px; }
+      th, td { padding: 7px 5px; }
+    }
+    @media print {
+      @page { size: A4; margin: 17mm 17mm 18mm; }
+      body { background: white; font-size: 9.5pt; line-height: 1.4; }
+      main { margin: 0; max-width: none; }
+      .sheet { padding: 0; margin: 0; break-after: page; }
+      .sheet:last-child { break-after: auto; }
+      h1 { font-size: 38pt; }
+      h2 { font-size: 23pt; }
+      h3 { font-size: 12pt; margin-top: 14px; }
+      h2, h3, .source { break-after: avoid; }
+      p, li { orphans: 3; widows: 3; }
+      table { font-size: 8.2pt; }
+      tr, .say, .note, pre, .flow { break-inside: avoid; }
+      th, td { padding: 6px 8px; }
+      pre { font-size: 8pt; line-height: 1.45; padding: 12px; }
+      #demo th:first-child { width: 17%; }
+      .lead { font-size: 11pt; }
+      .source, .small, .kicker { font-size: 8pt; }
+      .say, .note { padding: 10px 14px; margin: 16px 0; }
+      a { text-decoration: none; }
+      * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <section class="sheet" id="overview">
+    <p class="kicker">Project explanation &amp; presentation notes / September 2026</p>
+    <h1>EchoDrop<span>.</span></h1>
+    <p class="subtitle">A guide to the application, its code, and your demonstration.</p>
+    <p class="lead">EchoDrop is a city-themed message board built with Next.js, React, and MongoDB. Visitors can read conversations. Registered users can share short posts, comment, like posts, and manage their own posts.</p>
+    <p>Each post has a 24-hour active lifetime. The interface presents authors as "Someone in [city]" to keep the attention on the message.</p>
+    <div class="say"><strong>Opening statement you can use</strong>"EchoDrop is a full-stack message board for short conversations connected to a city. I use React for the interactive interface, Next.js for the pages and backend endpoints, and MongoDB for persistent storage. This presentation follows a message from the screen, through the server, into the database, and back."</div>
+    <h3>What this project demonstrates</h3>
+    <ul>
+      <li>A responsive interface with reusable components and clear interaction states.</li>
+      <li>Authentication with hashed passwords and a signed cookie-based token.</li>
+      <li>Database relationships between users, posts, comments, and votes.</li>
+      <li>Server-side validation, ownership checks, and requests without application data caching.</li>
+    </ul>
+    <hr class="rule">
+    <h3>Guide contents</h3>
+    <nav class="toc" aria-label="Document contents">
+      <a href="#overview">01 / Project overview</a>
+      <a href="#architecture">02 / Architecture and folders</a>
+      <a href="#account-pages">03 / Login and registration</a>
+      <a href="#feed">04 / The feed</a>
+      <a href="#conversation">05 / Post details and comments</a>
+      <a href="#profile-about">06 / Profile and About</a>
+      <a href="#interface">07 / Shared interface and design</a>
+      <a href="#database">08 / MongoDB and models</a>
+      <a href="#authentication">09 / Authentication and access</a>
+      <a href="#api">10 / API reference</a>
+      <a href="#helpers">11 / Helpers and caching</a>
+      <a href="#journey">12 / A request, explained step by step</a>
+      <a href="#demo">13 / Presentation and demo plan</a>
+      <a href="#questions">14 / Questions and current limits</a>
+    </nav>
+    <p class="small muted">Written against the current project files. Speaking notes describe implemented behavior; possible improvements are identified separately. No database credentials or private configuration values are included.</p>
+  </section>
+
+  <section class="sheet" id="architecture">
+    <p class="kicker">02 / The big picture</p>
+    <h2>One project, three responsibilities</h2>
+    <p>The frontend displays information and collects actions. The backend validates those actions and enforces access rules. MongoDB keeps the records after a page reload or application restart.</p>
+    <div class="flow" role="img" aria-label="Browser sends a JSON request to a Next.js API route, which uses Mongoose to read or write MongoDB. The response returns along the same path.">
+      <div><b>1. Browser</b>React pages and forms</div>
+      <div><b>2. Next.js API</b>Requests, validation, access</div>
+      <div><b>3. Mongoose</b>Schemas and queries</div>
+      <div><b>4. MongoDB</b>Persistent documents</div>
+    </div>
+    <p>A response travels back through the same layers as JSON, which the frontend uses to update the screen. The browser does not connect directly to MongoDB.</p>
+    <table>
+      <thead><tr><th>Technology</th><th>Role in EchoDrop</th></tr></thead>
+      <tbody>
+        <tr><td>Next.js / App Router</td><td>File-based page routes and backend route handlers in one application.</td></tr>
+        <tr><td>React / JavaScript</td><td>Components, form interactions, local state, and rendering lists.</td></tr>
+        <tr><td>MongoDB / Mongoose</td><td>Document storage plus model definitions, validation, references, and queries.</td></tr>
+        <tr><td>bcryptjs / jsonwebtoken</td><td>Password hashing and signing/verifying authentication tokens.</td></tr>
+        <tr><td>CSS / lucide-react</td><td>Responsive styling and consistent interface icons.</td></tr>
+      </tbody>
+    </table>
+    <h3>Where to find the code</h3>
+    <pre>echodrop/
+  app/           Pages, root layout, global CSS, and api/ routes
+  components/    Brand, AppShell, AuthForm, and PostCard
+  lib/           Database, authentication, requests, and query helpers
+  models/        User, Post, Comment, and Vote schemas
+  public/        Locally served city.jpg photograph
+  scripts/       check-db.mjs connection check
+  docs/          This presentation guide
+  package.json   Dependencies and runnable commands
+  next.config.mjs  API cache headers and developer indicator setting</pre>
+    <p><code>app/home/page.js</code> creates <code>/home</code>. <code>app/api/posts/route.js</code> creates <code>/api/posts</code>. A folder named <code>[id]</code> is a dynamic URL segment representing a particular post.</p>
+    <p><code>jsconfig.json</code> maps <code>@/</code> to the project root, so imports such as <code>@/lib/api</code> avoid long relative paths. <code>package-lock.json</code> records resolved dependency versions; <code>node_modules/</code> contains installed packages and <code>.next/</code> contains generated Next.js output.</p>
+    <div class="say"><strong>How to explain it</strong>"Next.js contains both the interface and the API. Mongoose is the layer that lets the server work with MongoDB through defined models."</div>
+  </section>
+
+  <section class="sheet" id="account-pages">
+    <p class="kicker">03 / Account pages</p>
+    <h2>Login and registration</h2>
+    <p class="source">Files: <code>app/page.js</code>, <code>app/register/page.js</code>, <code>components/auth-form.js</code></p>
+    <p>The login page is the first screen at <code>/</code>. Registration is at <code>/register</code>. Both use the same <code>AuthForm</code> component. The <code>register</code> prop selects the fields, wording, and endpoint.</p>
+    <table>
+      <thead><tr><th>Element</th><th>What it does and why it exists</th></tr></thead>
+      <tbody>
+        <tr><td>EchoDrop logo</td><td>Identifies the application and links to the login page on these screens.</td></tr>
+        <tr><td>Explore the feed</td><td>Opens the publicly readable feed without requiring registration.</td></tr>
+        <tr><td>City photograph</td><td>Connects the visual identity to the city theme. It is served from <code>public/city.jpg</code>.</td></tr>
+        <tr><td>Username</td><td>Used for login. New usernames require at least 3 characters; the form and model limit them to 50.</td></tr>
+        <tr><td>Email and city</td><td>Shown only during registration. Email identifies the account; city is attached to newly created posts.</td></tr>
+        <tr><td>Password and eye icon</td><td>Passwords are masked by default. The icon changes visibility without submitting the form. Registration requires at least 6 characters.</td></tr>
+        <tr><td>Primary button</td><td>Submits the form. Displays "Please wait..." and is disabled while a request is pending.</td></tr>
+        <tr><td>Error message</td><td>Displays a returned error, such as invalid credentials or a duplicate account.</td></tr>
+        <tr><td>Account link</td><td>Moves between login and registration without duplicating either form implementation.</td></tr>
+      </tbody>
+    </table>
+    <h3>What happens on submit</h3>
+    <ol>
+      <li><code>event.preventDefault()</code> stops a normal browser form navigation.</li>
+      <li><code>FormData</code> reads the named inputs, and <code>Object.fromEntries()</code> builds a plain object.</li>
+      <li><code>api()</code> sends a JSON POST to the selected authentication endpoint.</li>
+      <li>The server either creates the account or checks the login details, then sets the authentication cookie.</li>
+      <li>On success, the page uses <code>router.replace("/home")</code> and <code>router.refresh()</code> to enter the feed and refresh the server-rendered route data.</li>
+    </ol>
+    <p>Registration signs the user in immediately. There is no email verification, password-reset page, or social login in this version.</p>
+    <div class="say"><strong>How to explain it</strong>"Login and registration look related because they share one component. A single setting decides which fields and endpoint it uses. This keeps form behavior consistent and reduces repeated code."</div>
+  </section>
+
+  <section class="sheet" id="feed">
+    <p class="kicker">04 / Main page</p>
+    <h2>The feed</h2>
+    <p class="source">Route: <code>/home</code> / File: <code>app/home/page.js</code></p>
+    <p>The feed is the main workspace. It loads active posts through <code>useResource("/api/posts")</code> and renders each item with <code>PostCard</code>.</p>
+    <table>
+      <thead><tr><th>Element</th><th>Behavior</th></tr></thead>
+      <tbody>
+        <tr><td>Page heading</td><td>"The feed" identifies the current view. Supporting copy introduces the tone of the community.</td></tr>
+        <tr><td>Post composer</td><td>A textarea stores the current draft in React state. Newlines are preserved in the displayed post.</td></tr>
+        <tr><td>Character counter</td><td>Shows the draft length out of 300. The server also enforces the 300-character limit.</td></tr>
+        <tr><td>Drop a thought</td><td>Submits trimmed text. Disabled for an empty draft, while posting, or while the feed is loading. A successful response is added to the displayed list and the draft is cleared.</td></tr>
+        <tr><td>Latest / Most liked</td><td>Latest follows the server's newest-first order. Most liked sorts a copy of the loaded posts by upvote count in the browser.</td></tr>
+        <tr><td>Refresh icon</td><td>Requests the feed again. Spins during loading and is disabled during loading, posting, or voting.</td></tr>
+        <tr><td>Post header</td><td>Shows a location icon, "Someone in [city]," the creation date/time, and a lifetime label.</td></tr>
+        <tr><td>Post text</td><td>Opens the full conversation when clicked.</td></tr>
+        <tr><td>Heart icon</td><td>Toggles a like through the vote API. The displayed count is updated from the server response.</td></tr>
+        <tr><td>Comment icon</td><td>Shows the comment count and links to the conversation.</td></tr>
+        <tr><td>Loading, empty, error states</td><td>Distinguish an unfinished request, a feed with no active posts, and a failed request.</td></tr>
+      </tbody>
+    </table>
+    <h3>State worth explaining</h3>
+    <p><code>content</code> is the draft, <code>posting</code> tracks submission, <code>voting</code> tracks a vote request, and <code>sort</code> selects the order. The resource hook owns the posts, loading state, and error message. No separate global state library is needed for these page-level interactions.</p>
+    <div class="note"><strong>Be precise during the presentation</strong>The feed shows all cities by default. The API accepts an optional <code>?city=Skopje</code> filter, but the current frontend does not expose a city filter or use geolocation. Visitors can read posts; posting and liking require authentication, which the server checks.</div>
+    <div class="say"><strong>How to explain it</strong>"The feed combines reading and creating in one view. Sorting happens locally, while posts and likes are saved on the server. The counters change after a successful response, so they reflect confirmed database operations."</div>
+  </section>
+
+  <section class="sheet" id="conversation">
+    <p class="kicker">05 / Conversation page</p>
+    <h2>Post details and comments</h2>
+    <p class="source">Route: <code>/post/[id]</code> / File: <code>app/post/[id]/page.js</code></p>
+    <p>This page focuses on one post. <code>useParams()</code> reads its ID from the URL, and <code>useResource()</code> requests the corresponding post, comments, and delete permission.</p>
+    <table>
+      <thead><tr><th>Element</th><th>Behavior</th></tr></thead>
+      <tbody>
+        <tr><td>Back to the feed</td><td>Returns to the list without requiring the browser's Back button.</td></tr>
+        <tr><td>Detailed post</td><td>Reuses <code>PostCard</code> with <code>detail</code> enabled. Its body is text rather than another link to the same conversation.</td></tr>
+        <tr><td>Like button</td><td>Uses the same vote endpoint as the feed and updates the returned vote totals.</td></tr>
+        <tr><td>Delete icon</td><td>Visible only when the response contains <code>canDelete: true</code>. A browser confirmation appears before deletion.</td></tr>
+        <tr><td>Comments heading</td><td>Displays the current number of comments.</td></tr>
+        <tr><td>Add your voice</td><td>A textarea and 300-character counter collect a comment. The button requires nonblank text and an active post.</td></tr>
+        <tr><td>Comment list</td><td>Displays "Someone nearby," comment text, and creation time, with newest comments first.</td></tr>
+        <tr><td>Expired state</td><td>Shows an expired post label and disables new comments. Existing comments remain readable.</td></tr>
+      </tbody>
+    </table>
+    <h3>How the actions work</h3>
+    <p>The local <code>act(action)</code> helper handles the repeated busy-state and error logic for liking, commenting, and deleting. On a successful comment, the returned comment is inserted into the list, the count increases, and the draft clears.</p>
+    <p>Deletion is checked again on the server. The server compares the signed-in user with the stored post owner, then removes the post, its comments, and its votes. The interface returns to the feed.</p>
+    <h3>What "24 hours" actually means</h3>
+    <p>The server sets <code>expiresAt</code> to the creation time plus 24 hours. Feed queries exclude expired posts. Expired records remain in MongoDB and can still appear on the owner's profile or be opened by their URL. The expiration index is a normal index, not a database TTL deletion rule.</p>
+    <p>The "24h drop" label is not a countdown. There is no live expiration timer on an already-open page. A new request recalculates expiration; the comment API independently rejects comments after expiry. Voting currently remains possible on expired posts.</p>
+    <div class="say"><strong>How to explain it</strong>"A post leaves the active feed after 24 hours, but its record is retained. Commenting is restricted by the server, while ownership determines who is allowed to delete the conversation."</div>
+  </section>
+
+  <section class="sheet" id="profile-about">
+    <p class="kicker">06 / Supporting pages</p>
+    <h2>Profile and About</h2>
+    <h3>My profile / <code>/profile</code></h3>
+    <p class="source">File: <code>app/profile/page.js</code></p>
+    <p>The profile presents the current account and its posts. It makes two separate requests: <code>/api/auth/me</code> for account information and <code>/api/posts/mine</code> for that user's posts.</p>
+    <table>
+      <thead><tr><th>Element</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Initial avatar</td><td>Uses the first letter of the username as a simple visual identifier.</td></tr>
+        <tr><td>Username and email</td><td>Identify the signed-in account. The profile endpoint excludes the password hash.</td></tr>
+        <tr><td>City</td><td>Shows the stored account city used when creating posts.</td></tr>
+        <tr><td>My drops and total</td><td>Show the owner's posts and their number, including expired posts.</td></tr>
+        <tr><td>Post list</td><td>Reuses <code>PostCard</code>. Likes are displayed as a count here; open the conversation to like or delete a post.</td></tr>
+        <tr><td>Loading and empty states</td><td>Explain whether data is still loading or the account has not posted anything yet.</td></tr>
+      </tbody>
+    </table>
+    <p>If either protected request returns <code>401</code>, the resource hook redirects to login. Ownership filtering happens in the database query, using the authenticated user's ID.</p>
+    <p>The current profile is read-only. Editing the username, city, email, or password is not implemented.</p>
+    <div class="say"><strong>How to explain the profile</strong>"This page shows the relationship between a user and their posts. The server reads the user ID from the authentication token and uses it to query only that user's records."</div>
+    <h3>About EchoDrop / <code>/about</code></h3>
+    <p class="source">File: <code>app/about/page.js</code></p>
+    <p>The About page contains a heading, the city photograph, the shared brand, and short text describing the project's purpose. It reuses <code>AppShell</code> to keep navigation consistent with the other main pages.</p>
+    <p>Its informational content does not require a database query. The page itself has no form or content mutation, although the shared navigation still includes the logout action.</p>
+    <div class="say"><strong>How to explain About</strong>"The About page gives the project context and uses the same navigation and visual identity as the rest of the application."</div>
+  </section>
+
+  <section class="sheet" id="interface">
+    <p class="kicker">07 / Reusable interface elements</p>
+    <h2>Components and visual design</h2>
+    <table>
+      <thead><tr><th>File / component</th><th>Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td><code>app/layout.js</code><br>RootLayout</td><td>Wraps all routes in the HTML document, sets language to English, imports global CSS, and defines the page title/description. It opts pages into dynamic rendering.</td></tr>
+        <tr><td><code>components/brand.js</code><br>Brand</td><td>Combines the audio-lines icon, EchoDrop name, and accent dot in a link. A prop controls its destination.</td></tr>
+        <tr><td><code>components/app-shell.js</code><br>AppShell</td><td>Provides the sidebar, active navigation, city image, logout control, top status text, content area, and footer. The page content is passed as <code>children</code>.</td></tr>
+        <tr><td><code>components/auth-form.js</code><br>AuthForm</td><td>Provides the shared login/registration interface and submission logic.</td></tr>
+        <tr><td><code>components/post-card.js</code><br>PostCard</td><td>Displays a post consistently across the feed, profile, and details page. Props decide whether its body links elsewhere and which actions appear.</td></tr>
+        <tr><td><code>app/globals.css</code></td><td>Defines colors, type, spacing, layout, forms, post styles, responsive breakpoints, and focus states.</td></tr>
+      </tbody>
+    </table>
+    <h3>Navigation and status</h3>
+    <p><code>usePathname()</code> identifies the active page so its navigation link can be highlighted. Icons support the text labels. The logo returns to the feed in the main layout. Logout clears the authentication cookie, then returns to login.</p>
+    <p>The green "Here for 24 hours" label describes the post lifetime. It is decorative status text, not a database-health check, an online-user counter, or a real-time connection indicator.</p>
+    <h3>Design choices</h3>
+    <p>The visual system uses a light neutral background, white content surfaces, coral primary actions, and green supporting accents. Narrow reading columns help scan posts; consistent spacing and small corner radii keep the interface quiet and organized. The photograph is a static asset, not a live image of the user's selected city.</p>
+    <p>On desktop, navigation sits in a sticky left sidebar. At 700px and below, it moves above the content, and the sidebar photograph is hidden. The authentication photograph becomes a short horizontal image. Additional adjustments at 1000px and 370px refine spacing for narrower screens.</p>
+    <h3>Accessibility details</h3>
+    <p>Forms have labels, icon buttons have accessible names and tooltips, keyboard focus is visible, and selected navigation and sorting controls expose their state. Errors use <code>role="alert"</code>; loading messages use <code>role="status"</code>. Reduced-motion preferences disable animation. These are implemented features, not a claim of a complete accessibility audit.</p>
+    <div class="say"><strong>How to explain it</strong>"I extracted elements that repeat across pages. A change to the post component or navigation now updates every place that uses it, making the interface easier to maintain."</div>
+  </section>
+
+  <section class="sheet" id="database">
+    <p class="kicker">08 / Persistent storage</p>
+    <h2>MongoDB and the four models</h2>
+    <p class="source">Files: <code>lib/db.js</code> and <code>models/</code></p>
+    <p>MongoDB stores documents in collections. Mongoose defines the expected fields and provides methods such as <code>find()</code>, <code>findById()</code>, and <code>create()</code>. All four schemas enable timestamps, adding <code>createdAt</code> and <code>updatedAt</code>.</p>
+    <table>
+      <thead><tr><th>Model</th><th>Main fields and rules</th></tr></thead>
+      <tbody>
+        <tr><td><code>User</code></td><td><code>username</code>: required, unique, trimmed, 3-50 characters.<br><code>email</code>: required, unique, lowercase, trimmed.<br><code>passwordHash</code>: required hashed password.<br><code>city</code>: required and trimmed.</td></tr>
+        <tr><td><code>Post</code></td><td><code>content</code>: required, trimmed, maximum 300 characters.<br><code>city</code>: required location label.<br><code>user</code>: required reference to its owner.<br><code>expiresAt</code>: required indexed date.<br><code>upvoteCount</code> / <code>downvoteCount</code>: default to zero.</td></tr>
+        <tr><td><code>Comment</code></td><td><code>content</code>: required, trimmed, maximum 300 characters.<br><code>post</code>: reference to the conversation.<br><code>user</code>: reference to the comment author.</td></tr>
+        <tr><td><code>Vote</code></td><td><code>post</code> and <code>user</code>: required references.<br><code>isUpvote</code>: required Boolean.<br>A unique compound index on post + user allows one vote record per user per post when the index exists.</td></tr>
+      </tbody>
+    </table>
+    <h3>Relationships</h3>
+    <pre>User --&gt; many Posts
+User --&gt; many Comments &lt;-- Post
+User --&gt; many Votes    &lt;-- Post</pre>
+    <p>References store MongoDB <code>ObjectId</code> values. <code>populate("user", "username")</code> loads the referenced username when preparing post responses. Comment counts are calculated with an aggregation that groups comments by post, avoiding a separate count query for every card.</p>
+    <h3>Connection and configuration</h3>
+    <p><code>connectDb()</code> reads <code>MONGODB_URI</code> and calls <code>mongoose.connect()</code> with <code>dbName: "echodrop"</code>, explicitly selecting this project's database. It rejects a missing URI and uses a five-second server-selection timeout. Mongoose manages its normal connection pool; there is no custom global connection/promise cache.</p>
+    <p><code>.env.local</code> contains the local connection URI and JWT secret and is excluded from git. <code>.env.example</code> provides placeholders. <code>npm run db:check</code> loads the environment, connects, pings MongoDB, and disconnects without changing records or printing credentials.</p>
+    <div class="say"><strong>How to explain it</strong>"The models separate the main entities. A comment refers to both a user and a post, and a vote does the same. That lets the application calculate counts and enforce ownership without copying an entire user into every document."</div>
+  </section>
+
+  <section class="sheet" id="authentication">
+    <p class="kicker">09 / Identity and permissions</p>
+    <h2>How authentication works</h2>
+    <p class="source">Files: <code>lib/auth.js</code> and <code>app/api/auth/</code></p>
+    <h3>Registering an account</h3>
+    <ol>
+      <li>The endpoint trims username and city, lowercases email, and checks required values.</li>
+      <li>It checks for an existing username or email.</li>
+      <li><code>bcrypt.hash(password, 10)</code> produces a password hash, which is saved as <code>passwordHash</code>.</li>
+      <li>The server creates a signed JWT and sets an authentication cookie, immediately signing in the account.</li>
+    </ol>
+    <h3>Logging in</h3>
+    <p>The server looks up the username and uses <code>bcrypt.compare()</code> to check the supplied password against the stored hash. It does not decrypt a stored password. Invalid credentials return a generic error; valid credentials produce a new token and cookie.</p>
+    <h3>Token and cookie</h3>
+    <table>
+      <thead><tr><th>Setting</th><th>Current implementation</th></tr></thead>
+      <tbody>
+        <tr><td>JWT payload</td><td>User ID, username, and city. It is signed with <code>JWT_SECRET</code> and expires after seven days. Signing protects integrity; it does not make the payload encrypted.</td></tr>
+        <tr><td>Cookie name</td><td><code>echodrop_token</code>, available for the application's root path.</td></tr>
+        <tr><td><code>httpOnly</code></td><td>Prevents frontend JavaScript from reading the cookie directly.</td></tr>
+        <tr><td><code>secure</code></td><td>Enabled in production, restricting cookie transmission to HTTPS.</td></tr>
+        <tr><td>Cookie lifetime</td><td>Seven days, matching the token's intended lifetime.</td></tr>
+        <tr><td><code>sameSite</code></td><td>The explicit <code>sameSite: "lax"</code> option is currently commented out. Do not present it as an explicitly configured application guarantee.</td></tr>
+      </tbody>
+    </table>
+    <h3>Recognizing the current user</h3>
+    <p><code>getCurrentUser()</code> reads the cookie, verifies the token, connects to MongoDB, and loads selected user fields. Requests without a usable login cannot perform protected actions. Logout deletes the cookie; it does not delete the account or implement a server-side token revocation list.</p>
+    <h3>Authentication versus authorization</h3>
+    <p><strong>Authentication</strong> asks, "Who is making the request?" <strong>Authorization</strong> asks, "May this user perform this action?" A signed-in user can create a post, but only the post's owner can delete it. Hiding the delete button improves the interface; the API ownership check is the actual enforcement.</p>
+    <div class="say"><strong>How to explain it</strong>"Passwords are hashed in the database. A signed token in an HTTP-only cookie identifies the current account. The server still checks permission for actions such as deleting a post."</div>
+  </section>
+
+  <section class="sheet" id="api">
+    <p class="kicker">10 / Backend reference</p>
+    <h2>The API endpoints</h2>
+    <p>Routes under <code>app/api/</code> exchange JSON with the frontend. GET reads data, POST creates data or performs an action, and DELETE removes a resource. In this table, <code>:id</code> means the actual post ID.</p>
+    <table>
+      <thead><tr><th>Method and route</th><th>Access / input</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><code>POST /api/auth/register</code></td><td>Public.<br>Username, email, city, password.</td><td>Creates the account, sets the cookie, and returns basic user information.</td></tr>
+        <tr><td><code>POST /api/auth/login</code></td><td>Public.<br>Username and password.</td><td>Checks credentials, sets the cookie, and returns basic user information.</td></tr>
+        <tr><td><code>POST /api/auth/logout</code></td><td>No login required.<br>No body needed.</td><td>Deletes the cookie and returns <code>{ ok: true }</code>.</td></tr>
+        <tr><td><code>GET /api/auth/me</code></td><td>Login required.</td><td>Returns ID, username, email, and city.</td></tr>
+        <tr><td><code>GET /api/posts</code></td><td>Public.<br>Optional <code>city</code> query parameter.</td><td>Returns unexpired posts, newest first, with comment and vote counts.</td></tr>
+        <tr><td><code>POST /api/posts</code></td><td>Login required.<br><code>{ content }</code>.</td><td>Creates a post with the user's city and a 24-hour expiration date.</td></tr>
+        <tr><td><code>GET /api/posts/mine</code></td><td>Login required.</td><td>Returns the current user's posts, including expired ones.</td></tr>
+        <tr><td><code>GET /api/posts/:id</code></td><td>Public; uses login if present.</td><td>Returns the post, comments, and a <code>canDelete</code> flag.</td></tr>
+        <tr><td><code>DELETE /api/posts/:id</code></td><td>Login and ownership required.</td><td>Deletes the post and associated comments and votes.</td></tr>
+        <tr><td><code>POST /api/posts/:id/vote</code></td><td>Login required.<br><code>{ isUpvote: true }</code> for a like.</td><td>Creates, removes, or switches a vote and returns updated totals.</td></tr>
+        <tr><td><code>POST /api/comments</code></td><td>Login required.<br><code>{ postId, content }</code>.</td><td>Creates a comment if the post exists and has not expired.</td></tr>
+        <tr><td><code>GET /api/comments/post/:postId</code></td><td>Public.</td><td>Returns a post's comments, newest first. The detail page already receives comments from its post endpoint.</td></tr>
+      </tbody>
+    </table>
+    <h3>Status codes to recognize</h3>
+    <p><code>200</code> indicates a successful read or action; <code>201</code> indicates creation; <code>400</code> is used for rejected input; <code>401</code> means a login is missing or invalid; <code>403</code> means the user lacks permission; <code>404</code> means the target post is not found or its ID is invalid in the checked routes.</p>
+    <p>The vote model and endpoint also support downvotes, but the current interface only exposes likes. Clicking the same vote again removes it; switching direction updates the existing vote record and both counters.</p>
+    <div class="say"><strong>How to explain it</strong>"Each endpoint has a small, specific job. The frontend sends only the required input, and the server decides whether the operation is valid and permitted."</div>
+  </section>
+
+  <section class="sheet" id="helpers">
+    <p class="kicker">11 / Keeping the implementation small</p>
+    <h2>Shared logic and caching decisions</h2>
+    <table>
+      <thead><tr><th>Helper</th><th>What it centralizes</th></tr></thead>
+      <tbody>
+        <tr><td><code>lib/api.js</code><br><code>api()</code></td><td>Sends requests with <code>cache: "no-store"</code>, converts request bodies to JSON, parses responses, and throws an error with the HTTP status when the response is unsuccessful. If the response lacks a usable JSON error, it uses a generic message.</td></tr>
+        <tr><td><code>lib/use-resource.js</code><br><code>useResource()</code></td><td>Loads a URL, owns data/loading/error state, exposes setters and <code>reload()</code>, redirects on a 401 response, and aborts the request when the effect is cleaned up.</td></tr>
+        <tr><td><code>lib/posts.js</code><br><code>listPosts()</code></td><td>Queries posts, loads referenced usernames, counts comments in one aggregation, and returns summaries. Used by the public feed and personal post list.</td></tr>
+        <tr><td><code>lib/serialize.js</code></td><td><code>postSummary()</code> and <code>commentDto()</code> create plain response objects, convert IDs to strings, and select the fields sent to the browser. Post summaries calculate <code>isExpired</code>.</td></tr>
+        <tr><td><code>lib/db.js</code> / <code>lib/auth.js</code></td><td>Centralize database connection and authentication operations, so routes share one implementation.</td></tr>
+      </tbody>
+    </table>
+    <h3>What was simplified</h3>
+    <p>Repeated login/registration forms became <code>AuthForm</code>. Repeated navigation became <code>AppShell</code>. Post rendering became <code>PostCard</code>. Request handling and list queries moved into small helpers. Pages now focus mainly on their own state, actions, and composition.</p>
+    <h3>What "caching removed" means here</h3>
+    <ul>
+      <li>The old custom global Mongoose connection/promise cache was removed.</li>
+      <li>The root layout and GET API routes use <code>dynamic = "force-dynamic"</code>.</li>
+      <li>The frontend request helper explicitly sets <code>cache: "no-store"</code>.</li>
+      <li><code>next.config.mjs</code> adds <code>Cache-Control: no-store, max-age=0</code> to API responses.</li>
+      <li>Application links set <code>prefetch={false}</code>, avoiding automatic link prefetching.</li>
+    </ul>
+    <p>Mongoose's connection pool and model registry still exist. React state still holds what is currently on screen. Framework build output and ordinary static assets are separate concerns. The change removes custom connection caching and application page/API data caching; it does not eliminate every kind of storage inside the browser, framework, or database.</p>
+    <p>There is also no polling or WebSocket feed. Other people's new posts appear on a later fetch, such as when Refresh is clicked. Removing caching does not itself create real-time updates.</p>
+    <div class="say"><strong>How to explain it</strong>"I reduced repeated code and made data requests explicit. A new feed request reads the database, while React state holds the current display. The database driver still reuses connections efficiently."</div>
+  </section>
+
+  <section class="sheet" id="journey">
+    <p class="kicker">12 / Explaining the code in motion</p>
+    <h2>Follow one post from input to storage</h2>
+    <p>Use this example when asked how the frontend and backend connect. Assume an authenticated user whose city is Skopje writes <em>"A good day for a walk through the city."</em></p>
+    <ol>
+      <li><strong>The draft changes.</strong> The textarea's <code>onChange</code> updates <code>content</code>. React renders the new counter.</li>
+      <li><strong>The form submits.</strong> <code>submitPost()</code> prevents navigation, trims the text, sets the busy flag, and calls <code>api()</code>.</li>
+      <li><strong>The browser sends JSON.</strong> The request targets <code>POST /api/posts</code>. The same-origin authentication cookie accompanies it.</li>
+      <li><strong>The server identifies the user.</strong> <code>getCurrentUser()</code> verifies the token and loads the account from MongoDB.</li>
+      <li><strong>The server validates the content.</strong> Empty content and content exceeding 300 characters are rejected.</li>
+      <li><strong>The server sets trusted fields.</strong> The user ID and city come from the authenticated account, not from arbitrary author fields supplied by the browser. Expiration is set on the server.</li>
+      <li><strong>Mongoose saves the document.</strong> <code>Post.create()</code> stores the content, owner reference, city, and expiration date.</li>
+      <li><strong>The server returns a summary.</strong> The response has status 201 and includes the new ID, timestamps, counts, and other summary fields.</li>
+      <li><strong>The frontend updates.</strong> The returned post is inserted into React state, the draft clears, and the busy flag resets. A page reload can retrieve the same record from MongoDB.</li>
+    </ol>
+    <h3>The request body</h3>
+    <pre><code>{
+  "content": "A good day for a walk through the city."
+}</code></pre>
+    <p>The request does not need an author ID, city, expiration date, or initial vote count. Those values are assigned through the authenticated account, route logic, and model defaults.</p>
+    <h3>Two small JavaScript patterns</h3>
+    <p><code>setPosts(current =&gt; [post, ...current])</code> expresses "put the new post before the existing list." The actual page also handles an initially empty/null list. A functional state update uses the most recent state available to React.</p>
+    <p><code>current.map(...)</code> updates a single post's vote counts by ID. Spreading the old post into a new object preserves its other fields. This is an immutable update: it creates the next state instead of modifying the old object in place.</p>
+    <div class="say"><strong>How to explain it in one breath</strong>"The browser sends the message text. The API authenticates the user, validates the message, and adds the owner, city, and expiration. MongoDB saves it, and the returned record is then added to the feed."</div>
+  </section>
+
+  <section class="sheet" id="demo">
+    <p class="kicker">13 / Presenting the work</p>
+    <h2>A practical 10-minute demo</h2>
+    <table>
+      <thead><tr><th>Time</th><th>Show</th><th>Explain</th></tr></thead>
+      <tbody>
+        <tr><td>0:00-1:00</td><td>Login screen and project introduction.</td><td>Purpose, audience, and React + Next.js + MongoDB architecture.</td></tr>
+        <tr><td>1:00-2:00</td><td>Create an account or log in.</td><td>Shared form, validation, hashed passwords, and authentication cookie.</td></tr>
+        <tr><td>2:00-4:00</td><td>Create a short post, like it, switch sorting, and refresh.</td><td>Component state, API requests, server-confirmed counts, and persistent storage.</td></tr>
+        <tr><td>4:00-5:30</td><td>Open the post, add a comment, and reload.</td><td>Dynamic route ID, post/comment relationship, and saved data surviving reload.</td></tr>
+        <tr><td>5:30-6:30</td><td>Open My profile and About.</td><td>Ownership filtering, shared components, and the informational page.</td></tr>
+        <tr><td>6:30-8:00</td><td>Show selected code files.</td><td>Trace <code>submitPost()</code> to its API handler, model, and database helper.</td></tr>
+        <tr><td>8:00-9:00</td><td>Narrow the browser; then delete the demo post.</td><td>Responsive navigation and server-side deletion permission.</td></tr>
+        <tr><td>9:00-10:00</td><td>Log out and discuss improvements.</td><td>Session cookie removal, current limits, and next development steps.</td></tr>
+      </tbody>
+    </table>
+    <h3>Prepare before presenting</h3>
+    <p>Use a demonstration account and a recognizable test post. Open the app, verify MongoDB, and start the server if needed. Use the URL printed by Next.js; the previous session used <code>http://127.0.0.1:3000</code>.</p>
+    <p>Keep <code>app/home/page.js</code>, <code>app/api/posts/route.js</code>, <code>models/Post.js</code>, <code>lib/db.js</code>, and <code>components/post-card.js</code> ready. Explain one complete request before opening more files.</p>
+    <h3>Useful commands</h3>
+    <pre>npm run dev       # Start the development server
+npm run db:check  # Verify MongoDB connectivity
+npm run lint      # Run ESLint checks
+npm run build     # Create and verify a production build
+npm start         # Run the production build</pre>
+    <h3>What has been checked</h3>
+    <p>In the preceding implementation session, lint, build, and MongoDB checks passed. Browser checks covered account flows, password visibility, posting, liking, API cache headers, persisted comments, profile, and deletion. Desktop and 390px/320px layouts were checked; the completed workflow had no browser page errors.</p>
+    <p class="small muted">These are development checks. The temporary browser script and screenshots are in ignored TestResults/. Playwright was installed locally and is not a declared dependency. There is no npm test command or committed regression suite.</p>
+    <div class="say"><strong>Closing statement you can use</strong>"EchoDrop demonstrates the complete journey from an interactive form to a validated API request and a persisted database record. Shared components keep the frontend consistent, and the backend controls identity, ownership, and the post lifecycle."</div>
+  </section>
+
+  <section class="sheet" id="questions">
+    <p class="kicker">14 / Be ready for questions</p>
+    <h2>Accurate answers and next steps</h2>
+    <dl class="qa">
+      <dt>Is EchoDrop fully anonymous?</dt>
+      <dd>No. The interface hides author names, but MongoDB retains user references, and <code>postSummary()</code> currently includes <code>username</code> in public post responses. Describe it as an anonymous-style interface. Stronger anonymity would require changing the response fields and making explicit privacy decisions.</dd>
+      <dt>Are expired posts automatically deleted?</dt>
+      <dd>No. Expiration removes them from the active feed and blocks new comments on the server. Their records remain readable through the profile and direct post URLs. There is no TTL deletion rule or scheduled cleanup task.</dd>
+      <dt>What makes this a full-stack project?</dt>
+      <dd>It includes the interactive frontend, HTTP API handlers, authentication and business rules, and a persistent MongoDB data layer in the same repository.</dd>
+      <dt>Why use Mongoose if MongoDB already stores documents?</dt>
+      <dd>Mongoose adds the model definitions, validation rules, references, and query methods used by the application. MongoDB is the database itself.</dd>
+      <dt>What does "use client" mean?</dt>
+      <dd>It marks the client-component boundary for interactive code that uses state, effects, event handlers, or browser APIs. Next.js can still produce initial HTML for client components; it does not mean the whole application is browser-only.</dd>
+      <dt>Does disabling caching make the feed real-time?</dt>
+      <dd>No. Each new request reads current data, but the interface must make that request. There is no automatic polling or WebSocket subscription.</dd>
+      <dt>Can a user delete someone else's post by calling the API?</dt>
+      <dd>The delete endpoint checks authentication and compares the stored owner ID with the current user. A different user receives a 403 response even if they bypass the interface.</dd>
+    </dl>
+    <h3>Reasonable future improvements</h3>
+    <p>These are development opportunities, not completed features:</p>
+    <ul>
+      <li>Remove author names from public responses if stronger anonymity is a requirement.</li>
+      <li>Add pagination, a visible city filter, and a clearer signed-out state for protected actions.</li>
+      <li>Add profile editing, password recovery, and moderation/reporting.</li>
+      <li>Standardize server-side request validation and error responses across all routes.</li>
+      <li>Make multi-document vote updates and deletion more robust under concurrent requests or partial failure. The current operations are not wrapped in a transaction.</li>
+      <li>Add explicit cookie policy, request-abuse protection, and a repeatable automated test suite before a broader deployment.</li>
+    </ul>
+    <h3>Five terms to remember</h3>
+    <p><strong>Component:</strong> a reusable piece of interface. <strong>State:</strong> data that changes what React displays. <strong>Endpoint:</strong> a URL and HTTP method handled by the server. <strong>Schema:</strong> a definition of document fields and rules. <strong>DTO/serialization:</strong> selecting and shaping the data returned to the client.</p>
+    <p class="small muted">Source of this guide: the current EchoDrop pages, components, API routes, helpers, schemas, configuration, README, and the preceding development verification results. Recheck behavior after future code changes.</p>
+  </section>
+</main>
+</body>
+</html>

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-import { connectDb } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { commentDto } from "@/lib/serialize";
 import Comment from "@/models/Comment";
@@ -12,7 +11,6 @@ export async function POST(request) {
     return NextResponse.json({ error: "You must be logged in." }, { status: 401 });
   }
 
-  await connectDb();
   const body = await request.json();
   const postId = body.postId;
   const content = body.content?.trim();

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-import { connectDb } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import Post from "@/models/Post";
 import Vote from "@/models/Vote";
@@ -11,7 +10,6 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: "You must be logged in." }, { status: 401 });
   }
 
-  await connectDb();
   const { id } = await params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json({ error: "Post not found." }, { status: 404 });

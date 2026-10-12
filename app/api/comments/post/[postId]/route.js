@@ -5,6 +5,8 @@ import { commentDto } from "@/lib/serialize";
 import Comment from "@/models/Comment";
 import Post from "@/models/Post";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(_request, { params }) {
   await connectDb();
   const { postId } = await params;
